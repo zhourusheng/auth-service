@@ -6,6 +6,8 @@ import {
   Request,
   Get,
   Query,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -26,6 +28,14 @@ export class AuthController {
   @Post('login')
   async login(@Request() req, @Body() loginDto: LoginDto) {
     return this.authService.login(req.user);
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout() {
+    // 由于JWT是无状态的，服务端不需要做特殊处理
+    // 客户端只需要删除本地存储的token即可
+    return { message: 'Logout successful' };
   }
 
   @UseGuards(JwtAuthGuard)
